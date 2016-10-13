@@ -10,7 +10,7 @@ Atomify::Atomify(QObject *parent) : QObject(parent),
     m_stateMachine->addState(m_states->crashed());
     m_stateMachine->addState(m_states->idle());
     m_stateMachine->addState(m_states->finished());
-    m_stateMachine->addDefaultAnimation(m_states->continued());
+    m_stateMachine->addState(m_states->continued());
 
     m_states->idle()->addTransition(this, SIGNAL(start()), m_states->parsing());
     m_states->parsing()->addTransition(this, SIGNAL(crashed()), m_states->crashed());
@@ -21,6 +21,8 @@ Atomify::Atomify(QObject *parent) : QObject(parent),
 
     m_states->finished()->addTransition(this, SIGNAL(reset()), m_states->idle());
     m_states->finished()->addTransition(this, SIGNAL(continued()), m_states->continued());
+
+    m_states->continued()->addTransition(this, SIGNAL(reset()), m_states->idle());
 
     m_stateMachine->setInitialState(m_states->idle());
     m_stateMachine->start();

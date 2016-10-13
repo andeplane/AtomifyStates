@@ -11,7 +11,7 @@ States::States(QObject *parent) : QObject(parent),
     m_idle->setObjectName("Idle");
     m_finished->setObjectName("Finished");
     m_parsing->setObjectName("Parsing");
-    m_continued->setObjectName("Parsing");
+    m_continued->setObjectName("Continued");
     m_list << QVariant::fromValue(m_idle) << QVariant::fromValue(m_crashed) << QVariant::fromValue(m_finished) << QVariant::fromValue(m_parsing) << QVariant::fromValue(m_continued);
 }
 

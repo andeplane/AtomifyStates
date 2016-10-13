@@ -36,7 +36,7 @@ Window {
             }
             Button {
                 text: "Reset"
-                enabled: atomify.states.parsing.active || atomify.states.crashed.active || atomify.states.finished.active
+                enabled: atomify.states.parsing.active || atomify.states.crashed.active || atomify.states.finished.active || atomify.states.continued.active
                 onClicked: atomify.reset()
             }
             Button {
