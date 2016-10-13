@@ -14,6 +14,8 @@ Window {
         id: atomify
         onStart: timer.start()
         onCrashed: timer.stop()
+        onPaused: timer.stop()
+        onUnPaused: timer.start()
     }
 
     Timer {
@@ -43,6 +45,16 @@ Window {
                 text: "Continue"
                 enabled: atomify.states.finished.active
                 onClicked: atomify.continued()
+            }
+            Button {
+                text: "Pause"
+                enabled: atomify.states.parsing.active || atomify.states.continued.active
+                onClicked: atomify.paused()
+            }
+            Button {
+                text: "Unpause"
+                enabled: atomify.states.paused.active
+                onClicked: atomify.unPaused()
             }
             Button {
                 text: "Force crash"

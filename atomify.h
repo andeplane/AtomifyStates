@@ -21,6 +21,8 @@ signals:
     void start();
     void continued();
     void finished();
+    void paused();
+    void unPaused();
 
 public slots:
     void setStateMachine(QStateMachine* stateMachine);

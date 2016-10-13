@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QState>
+#include <QHistoryState>
 #include <QVariantList>
 
 class States : public QObject
@@ -13,7 +14,10 @@ class States : public QObject
     Q_PROPERTY(QState* idle READ idle WRITE setIdle NOTIFY idleChanged)
     Q_PROPERTY(QState* finished READ finished WRITE setFinished NOTIFY finishedChanged)
     Q_PROPERTY(QState* continued READ continued WRITE setContinued NOTIFY continuedChanged)
+    Q_PROPERTY(QState* paused READ paused WRITE setPaused NOTIFY pausedChanged)
+    Q_PROPERTY(QHistoryState* unPaused READ unPaused WRITE setUnPaused NOTIFY unPausedChanged)
     Q_PROPERTY(QVariantList list READ list WRITE setList NOTIFY listChanged)
+
 public:
     explicit States(QObject *parent = 0);
     QState* crashed() const;
@@ -22,6 +26,8 @@ public:
     QState* parsing() const;
     QVariantList list() const;
     QState* continued() const;
+    QState* paused() const;
+    QHistoryState* unPaused() const;
 
 signals:
     void crashedChanged(QState* crashed);
@@ -30,6 +36,8 @@ signals:
     void parsingChanged(QState* parsing);
     void listChanged(QVariantList list);
     void continuedChanged(QState* continued);
+    void pausedChanged(QState* paused);
+    void unPausedChanged(QHistoryState* unPaused);
 
 public slots:
     void setCrashed(QState* crashed);
@@ -38,6 +46,8 @@ public slots:
     void setParsing(QState* parsing);
     void setList(QVariantList list);
     void setContinued(QState* continued);
+    void setPaused(QState* paused);
+    void setUnPaused(QHistoryState* unPaused);
 
 private:
     QState* m_crashed;
@@ -46,6 +56,8 @@ private:
     QState* m_parsing;
     QVariantList m_list;
     QState* m_continued;
+    QState* m_paused;
+    QHistoryState* m_unPaused;
 };
 
 #endif // STATES_H

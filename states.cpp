@@ -5,14 +5,18 @@ States::States(QObject *parent) : QObject(parent),
     m_idle(new QState()),
     m_finished(new QState()),
     m_parsing(new QState()),
-    m_continued(new QState())
+    m_continued(new QState()),
+    m_paused(new QState()),
+    m_unPaused(new QHistoryState())
 {
     m_crashed->setObjectName("Crashed");
     m_idle->setObjectName("Idle");
     m_finished->setObjectName("Finished");
     m_parsing->setObjectName("Parsing");
     m_continued->setObjectName("Continued");
-    m_list << QVariant::fromValue(m_idle) << QVariant::fromValue(m_crashed) << QVariant::fromValue(m_finished) << QVariant::fromValue(m_parsing) << QVariant::fromValue(m_continued);
+    m_paused->setObjectName("Paused");
+    m_unPaused->setObjectName("Unpaused");
+    m_list << QVariant::fromValue(m_idle) << QVariant::fromValue(m_crashed) << QVariant::fromValue(m_finished) << QVariant::fromValue(m_parsing) << QVariant::fromValue(m_continued) << QVariant::fromValue(m_paused);
 }
 
 QState *States::crashed() const
@@ -43,6 +47,16 @@ QVariantList States::list() const
 QState *States::continued() const
 {
     return m_continued;
+}
+
+QState *States::paused() const
+{
+    return m_paused;
+}
+
+QHistoryState *States::unPaused() const
+{
+    return m_unPaused;
 }
 
 void States::setCrashed(QState *crashed)
@@ -98,3 +112,22 @@ void States::setContinued(QState *continued)
     m_continued = continued;
     emit continuedChanged(continued);
 }
+
+void States::setPaused(QState *paused)
+{
+    if (m_paused == paused)
+        return;
+
+    m_paused = paused;
+    emit pausedChanged(paused);
+}
+
+void States::setUnPaused(QHistoryState *unPaused)
+{
+    if (m_unPaused == unPaused)
+        return;
+
+    m_unPaused = unPaused;
+    emit unPausedChanged(unPaused);
+}
+

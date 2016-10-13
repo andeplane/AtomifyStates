@@ -11,11 +11,14 @@ Atomify::Atomify(QObject *parent) : QObject(parent),
     m_stateMachine->addState(m_states->idle());
     m_stateMachine->addState(m_states->finished());
     m_stateMachine->addState(m_states->continued());
+    m_stateMachine->addState(m_states->paused());
+    m_stateMachine->addState(m_states->unPaused());
 
     m_states->idle()->addTransition(this, SIGNAL(start()), m_states->parsing());
     m_states->parsing()->addTransition(this, SIGNAL(crashed()), m_states->crashed());
     m_states->parsing()->addTransition(this, SIGNAL(finished()), m_states->finished());
     m_states->parsing()->addTransition(this, SIGNAL(reset()), m_states->idle());
+    m_states->parsing()->addTransition(this, SIGNAL(paused()), m_states->paused());
 
     m_states->crashed()->addTransition(this, SIGNAL(reset()), m_states->idle());
 
@@ -23,8 +26,19 @@ Atomify::Atomify(QObject *parent) : QObject(parent),
     m_states->finished()->addTransition(this, SIGNAL(continued()), m_states->continued());
 
     m_states->continued()->addTransition(this, SIGNAL(reset()), m_states->idle());
+    m_states->continued()->addTransition(this, SIGNAL(paused()), m_states->paused());
 
+    m_states->paused()->addTransition(this, SIGNAL(unPaused()), m_states->unPaused());
     m_stateMachine->setInitialState(m_states->idle());
+
+    connect(this, &Atomify::paused, this, [&]() {
+        if(m_states->parsing()->active()) {
+            m_states->unPaused()->setDefaultState(m_states->parsing());
+        } else if(m_states->continued()->active()) {
+            m_states->unPaused()->setDefaultState(m_states->continued());
+        }
+    });
+
     m_stateMachine->start();
 }
 
